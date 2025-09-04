@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import SignUp from './features/auth/components/sign-up/sign-up.tsx'
+import SignUpForm from './features/auth/components/sign-up/sign-up-form.jsx'
 
 function App() {
 
   return (
     <>
-      <SignUp/>
+      <SignUpForm/>
     </>
   )
 }
