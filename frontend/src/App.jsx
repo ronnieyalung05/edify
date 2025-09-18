@@ -1,23 +1,58 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignUpPage from './pages/sign-up-page';
-import CheckEmailPage from './pages/check-email-page';
-import SignInPage from './pages/sign-in-page'; // optional
-import LandingPage from './pages/landing-page';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./routes/PublicRoute";
+
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage";
+import CheckEmailPage from "./pages/CheckEmailPage";
+import LandingPage from "./pages/LandingPage"
 
 function App() {
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage/>}/>
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/signin" element={<SignInPage />} />
-        <Route path="/checkemail" element={<CheckEmailPage />} />
-        {/* Add other routes here */}
-      </Routes>
-    </Router>
-  );
-};
+    <AuthProvider>
+      <Router>
+        <Routes>
 
-export default App
+          {/* Public */}
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUpPage />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/signin"
+            element={
+              <PublicRoute>
+                <SignInPage />
+              </PublicRoute>
+            }
+          />
+
+          <Route path="/checkemail" element={<CheckEmailPage />} />
+
+          {/* Protected */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Default redirect */}
+          <Route path="*" element={<LandingPage />} />
+
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;

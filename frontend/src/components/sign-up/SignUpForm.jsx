@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from 'lucide-react';
-import { signUpNewUser } from "../../../../services/auth";
+import { signUpNewUser } from "../../services/auth";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
@@ -17,15 +17,9 @@ const SignUpForm = () => {
     setErrorMessage("");
     setLoading(true);
 
-    // Simple frontend validation
-    if (!email || !password) {
-      setErrorMessage("Please provide both email and password.");
-      setLoading(false);
-      return;
-    }
-
     const result = await signUpNewUser(email, password);
 
+    // needs to check email first, then go to login
     if (result.success) {
       navigate("/checkemail", { state: { email } }); // NAVIGATION
     } else {
@@ -37,6 +31,7 @@ const SignUpForm = () => {
 
   return (
     <div>
+      <button type="button" onClick={() => navigate("/signin")}>To Sign In</button>
       <form onSubmit={handleSignUp}>
         <label htmlFor="email">Email Address</label>
         <input
@@ -46,7 +41,6 @@ const SignUpForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <div>
           <label htmlFor="password">Password</label>
           <input
@@ -61,7 +55,7 @@ const SignUpForm = () => {
           </button>
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading || (!email || !password)}> {/* disabled if loading, or a field isn't filled out*/}
           {loading ? "Signing Up..." : "Sign Up"}
         </button>
 
